@@ -36,12 +36,13 @@
       height: 100vh;
     }
 
-    #motion-list-window { 
+    #motion-list-window,
+    #motion-merge-window { 
       position: absolute;
       top: 40px;
       left: 10px;
       width: 260px;
-      max-height: 72vh;
+      max-height: 85vh;
       background: rgba(12, 12, 16, 0.85);
       backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -55,7 +56,8 @@
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
     }
 
-    #motion-list-window h3 {
+    #motion-list-window h3,
+    #motion-merge-window h3 {
       margin: 0 0 16px 0;
       text-align: center;
       font-size: 1.1em;
@@ -66,28 +68,32 @@
     }
 
 
-    #merge-section {
-      margin-bottom: 16px;
-      padding: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.03);
+    .merge-header {
+      margin-bottom: 12px;
     }
 
-    #merge-section label {
+    .merge-header label {
       display: block;
-      margin-bottom: 8px;
-      font-size: 0.85em;
-      color: #b0b0b0;
+      margin-bottom: 4px;
+      font-size: 0.9em;
+      color: #ffffff;
       font-weight: 500;
     }
 
+    .merge-instructions {
+      opacity: 0.7;
+      font-size: 0.75em;
+      color: #b0b0b0;
+    }
+
+    .merge-select-container {
+      margin-bottom: 12px;
+    }
 
     #motion-multi-select {
       width: 100%;
-      height: 90px;
+      height: 120px;
       padding: 8px;
-      margin-bottom: 8px;
       box-sizing: border-box;
       background: rgba(255, 255, 255, 0.05);
       color: #e0e0e0;
@@ -95,7 +101,6 @@
       border-radius: 6px;
       font-size: 0.85em;
     }
-
     
     #motion-multi-select option {
       background: rgba(12, 12, 16, 0.8);
@@ -106,6 +111,94 @@
     #motion-multi-select option:checked {
       background: rgba(var(--accent), 0.3);
       color: #ffffff;
+    }
+
+    .merge-preview {
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .selected-count {
+      font-size: 0.85em;
+      color: #b0b0b0;
+      margin-bottom: 6px;
+    }
+
+    .selected-count span {
+      color: #ffffff;
+      font-weight: 500;
+    }
+
+    .selected-list {
+      max-height: 60px;
+      overflow-y: auto;
+      font-size: 0.8em;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+    }
+
+    .selected-list::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .selected-list::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .selected-list::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 3px;
+    }
+
+    .selected-list::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .selected-list-item {
+      padding: 2px 4px;
+      margin: 2px 0;
+      background: rgba(var(--accent), 0.1);
+      border-radius: 4px;
+      color: #e0e0e0;
+    }
+
+    .primary-btn {
+      background: rgba(var(--accent), 0.6);
+      color: white;
+      border: 1px solid rgba(var(--accent), 0.8);
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85em;
+      font-weight: 500;
+      transition: all 150ms ease;
+    }
+
+    .primary-btn:hover:not(:disabled) {
+      background: rgba(var(--accent), 0.8);
+    }
+
+    .primary-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .secondary-btn {
+      background: rgba(255, 255, 255, 0.1);
+      color: #e0e0e0;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85em;
+      transition: all 150ms ease;
+    }
+
+    .secondary-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
     }
 
     
@@ -193,6 +286,96 @@
       color: #ffffff;
       text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
       letter-spacing: 0.5px;
+    }
+
+    #parts-window {
+      position: absolute;
+      top: 40px;
+      right: 10px;
+      width: 260px;
+      max-height: 55vh;
+      background: rgba(12, 12, 16, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 16px;
+      box-sizing: border-box;
+      z-index: 100;
+      overflow-y: auto;
+      color: white;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    #parts-window h3 {
+      margin: 0 0 16px 0;
+      text-align: center;
+      font-size: 1.1em;
+      font-weight: 600;
+      color: #ffffff;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+      letter-spacing: 0.5px;
+    }
+
+    .part-item {
+      margin-bottom: 8px;
+      padding: 6px 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      transition: all 150ms ease;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .part-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(var(--accent), 0.2);
+    }
+
+    .part-label {
+      font-size: 0.8em;
+      font-weight: 500;
+      color: #e0e0e0;
+      flex: 1;
+      margin-right: 10px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .part-toggle {
+      width: 44px;
+      height: 24px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      position: relative;
+      cursor: pointer;
+      transition: all 150ms ease;
+    }
+
+    .part-toggle.active {
+      background: rgba(var(--accent), 0.6);
+      border-color: rgba(var(--accent), 0.8);
+    }
+
+    .part-toggle-slider {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 18px;
+      height: 18px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+      transition: transform 150ms ease;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .part-toggle.active .part-toggle-slider {
+      transform: translateX(20px);
+      background: rgba(255, 255, 255, 0.95);
     }
 
     #expression-list-window {
@@ -330,6 +513,104 @@
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
     }
 
+    #recording-window {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translate(-50%, 0);
+      z-index: 140;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 18px;
+      background: rgba(12, 12, 16, 0.65);
+      backdrop-filter: blur(12px);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      color: #f6ffff;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-size: 0.9em;
+      transition: opacity 180ms ease, transform 180ms ease;
+      opacity: 0.98;
+    }
+
+    #recording-window.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, 18px);
+    }
+
+    #recording-window .rec-btn {
+      width: 38px;
+      height: 38px;
+      min-width: 38px;
+      min-height: 38px;
+      aspect-ratio: 1 / 1;
+      box-sizing: border-box;
+      padding: 0;
+      line-height: 1;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 90, 90, 0.6);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      background: linear-gradient(135deg, rgba(255,80,80,0.98), rgba(210,30,30,0.92));
+      color: white;
+      box-shadow: 0 3px 10px rgba(210, 30, 30, 0.28);
+      overflow: hidden;
+      vertical-align: middle;
+    }
+
+    #recording-window .pause-btn,
+    #recording-window .stop-btn,
+    #recording-window .download-btn {
+      padding: 7px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      cursor: pointer;
+      background: rgba(var(--accent), 0.06);
+      color: #f6ffff;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.22);
+      transition: background 120ms ease, transform 120ms ease;
+    }
+
+    #recording-window .pause-btn:hover,
+    #recording-window .stop-btn:hover,
+    #recording-window .download-btn:not(.disabled):hover {
+      background: rgba(var(--accent), 0.12);
+      transform: translateY(-2px);
+    }
+
+    #recording-window .download-btn.disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    #recording-window .timer {
+      min-width: 48px;
+      text-align: center;
+      color: #ffddc6;
+      font-weight: 600;
+      font-family: 'Courier New', monospace;
+    }
+
+    /* subtle recording state style */
+    body.recording #recording-window {
+      box-shadow: 0 10px 32px rgba(220,20,60,0.12);
+      transform: translate(-50%, -6px);
+    }
+    body.recording .rec-indicator {
+      width: 8px;
+      height: 8px;
+      background: rgba(255,40,40,0.98);
+      border-radius: 50%;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+      margin-left: 8px;
+    }
+
     .ctrl-btn {
       height: 36px;
       width: 36px;
@@ -446,7 +727,7 @@
       border-top: 1px solid rgba(255, 255, 255, 0.1);
       display: flex;
       gap: 8px;
-      justify-content: center;
+      justify-content: space-between;
       flex-wrap: wrap;
       flex-shrink: 0;
     }
@@ -456,7 +737,7 @@
       display: flex;
       flex-direction: column;
       height: 100%;
-      max-height: calc(72vh - 32px);
+      max-height: calc(85vh - 32px);
     }
 
     .app-footer {
@@ -495,15 +776,18 @@
     }
   </style>
   <script src="./Core/live2dcubismcore.js"></script>
-  <script type="module" crossorigin src="/live2d-viewer/assets/index-CA-O8gIs.js"></script>
+  <script type="module" crossorigin src="/live2d-viewer/assets/index-B8nWo6RN.js"></script>
 </head>
 
 <body>
 
   <div id="control-bar" aria-hidden="false">
     <button id="toggle-window-btn" class="ctrl-btn" title="Toggle Motions (M)" aria-label="Toggle Motions (M)">🎞</button>
+    <button id="toggle-merge-btn" class="ctrl-btn" title="Toggle Motion Merge (N)" aria-label="Toggle Motion Merge (N)">🖇</button>
     <button id="toggle-params-btn" class="ctrl-btn" title="Toggle Parameters (P)" aria-label="Toggle Parameters (P)">⚙︎</button>
+    <button id="toggle-parts-btn" class="ctrl-btn" title="Toggle Parts (T)" aria-label="Toggle Parts (T)">🛠</button>
     <button id="toggle-expr-btn" class="ctrl-btn" title="Toggle Expressions (E)" aria-label="Toggle Expressions (E)">☹</button>
+    <button id="toggle-recording-btn" class="ctrl-btn" title="Toggle Recording Controls (R)" aria-label="Toggle Recording Controls (R)">▶</button>
     <div class="ctrl-sep"></div>
     <button id="btn-bg-picker" class="ctrl-btn" title="Background Color (B)" aria-label="Background Color (B)"><span class="bg-swatch" style="background: #000; width:18px; height:18px; border-radius:50%; display:inline-block; vertical-align:middle; margin-right:0;"></span></button>
     <button id="btn-reset-view" class="ctrl-btn" title="Reset View">⤾</button>
@@ -519,16 +803,39 @@
     <div class="window-content">
       <div class="scrollable-content">
         <div id="motion-content" tabindex="0">
-          <label for="motion-multi-select">Select Motions to Merge (Ctrl/Cmd+Click for multiple):</label>
-          <select id="motion-multi-select" multiple size="6">
-          </select>
-  
           <ul id="motion-list">
           </ul>
         </div>
       </div>
       <div class="window-controls">
-        <button id="merge-btn" class="refresh-btn">Merge & Play</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="motion-merge-window" style="display: none;" role="dialog" aria-hidden="true">
+    <h3>Motion Merge</h3>
+    <div class="window-content">
+      <div class="scrollable-content">
+        <div class="merge-header">
+          <label for="motion-multi-select">Select motions to merge:</label>
+          <div class="merge-instructions">
+            <small>Hold Ctrl/Cmd to select multiple motions</small>
+          </div>
+        </div>
+        <div class="merge-select-container">
+          <select id="motion-multi-select" multiple size="8">
+          </select>
+        </div>
+        <div class="merge-preview">
+          <div class="selected-count">
+            <span id="selected-motions-count">0</span> motions selected
+          </div>
+          <div id="selected-motions-list" class="selected-list"></div>
+        </div>
+      </div>
+      <div class="window-controls">
+        <button id="clear-selection-btn" class="secondary-btn">Clear Selection</button>
+        <button id="merge-btn" class="primary-btn" disabled>Merge & Play</button>
       </div>
     </div>
   </div>
@@ -545,6 +852,19 @@
     </div>
   </div>
 
+  <div id="parts-window" style="display: none;" role="dialog" aria-hidden="true">
+    <h3>Parts</h3>
+    <div class="window-content">
+      <div class="scrollable-content">
+        <div id="parts-list">
+        </div>
+      </div>
+      <div class="window-controls">
+        <button id="parts-reset-btn" class="refresh-btn">Reset All</button>
+      </div>
+    </div>
+  </div>
+
   <div id="expression-list-window" style="display: none;">
     <h3>Expressions</h3>
     <div class="window-content">
@@ -557,6 +877,19 @@
         <button id="expr-reset-btn" class="refresh-btn">Reset</button>
       </div>
     </div>
+  </div>
+
+  <div id="recording-window" class="hidden" aria-live="polite" aria-label="Recording Controls" aria-hidden="true">
+    <button id="rec-start-btn" class="rec-btn" title="Start Recording" aria-label="Start Recording">●</button>
+    <button id="rec-pause-btn" class="pause-btn" title="Pause Recording" aria-label="Pause Recording" disabled>⏸</button>
+    <button id="rec-stop-btn" class="stop-btn" title="Stop Recording" aria-label="Stop Recording" disabled>⏹</button>
+    <a id="rec-download-btn" class="download-btn disabled" href="#" download="live2d_recording.webm" aria-disabled="true">Download</a>
+    <div class="timer" id="rec-timer">00:00</div>
+    <label style="opacity:0.9;font-size:0.85em;margin-left:8px;display:flex;align-items:center;gap:8px;">
+      <input id="rec-include-audio" type="checkbox" aria-label="Include app audio"> Audio
+    </label>
+    <div class="note" style="opacity:0.8;font-size:0.8em;margin-left:8px;">Video only — UI remains visible and usable, but is not recorded</div>
+    <div class="rec-indicator" aria-hidden="true"></div>
   </div>
 
 <footer class="app-footer">
