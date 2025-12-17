@@ -4,6 +4,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Live2D model viewer with motion playback, parameter control, and recording capabilities">
+  <meta property="og:title" content="Live2D Viewer">
+  <meta property="og:description" content="Online Live2D model viewer and animation tool">
+  <meta property="og:type" content="website">
   <script defer src="https://cloud.umami.is/script.js" data-website-id="af37bba4-341c-47ac-b068-b3e0556ee208"></script>
   <title>Live2D Viewer</title>
   <style>
@@ -631,6 +635,35 @@
       background: rgba(255, 255, 255, 0.04);
     }
 
+    .workspace-select {
+      min-width: 140px;
+      max-width: 220px;
+      height: 30px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.35);
+      color: #f0f0f0;
+      font-size: 0.8em;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      outline: none;
+    }
+
+    .workspace-select:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    #workspace-remove-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    #workspace-remove-btn:not(:disabled):hover {
+      background: rgba(255, 80, 80, 0.2);
+      border-color: rgba(255, 80, 80, 0.4);
+    }
+
     .ctrl-sep {
       width: 1px;
       height: 24px;
@@ -774,9 +807,161 @@
     .app-footer .separator {
       color: rgba(255, 255, 255, 0.3);
     }
+
+    /* Background settings window */
+    #bg-window {
+      position: absolute;
+      top: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 320px;
+      max-height: 60vh;
+      background: rgba(12, 12, 16, 0.9);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 16px;
+      box-sizing: border-box;
+      z-index: 110;
+      overflow-y: auto;
+      color: white;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
+      display: none;
+    }
+
+    #bg-window h3 {
+      margin: 0 0 12px 0;
+      font-size: 1.05em;
+      font-weight: 600;
+      text-align: left;
+    }
+
+    .bg-mode-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .bg-mode-options {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 0.85em;
+      padding: 4px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .bg-mode-options label {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      padding: 4px 10px;
+      border-radius: 999px;
+      transition: background 150ms ease, color 150ms ease, border-color 150ms ease;
+      border: 1px solid transparent;
+    }
+
+    .bg-mode-options input[type="radio"] {
+      display: none;
+    }
+
+    .bg-mode-tab.active {
+      background: rgba(var(--accent), 0.25);
+      border-color: rgba(var(--accent), 0.7);
+      color: #ffffff;
+    }
+
+    .bg-section {
+      padding: 10px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 10px;
+      font-size: 0.8em;
+      display: none;
+    }
+
+    .bg-section.active {
+      display: block;
+    }
+
+    .bg-section-header {
+      font-weight: 600;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .bg-section-body {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .bg-color-input {
+      width: 32px;
+      height: 20px;
+      padding: 0;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: transparent;
+    }
+
+    .bg-angle-input {
+      width: 72px;
+      padding: 4px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: rgba(0, 0, 0, 0.25);
+      color: #f0f0f0;
+      font-size: 0.8em;
+    }
+
+    .bg-image-input {
+      font-size: 0.75em;
+      max-width: 100%;
+    }
+
+    .bg-preview {
+      width: 100%;
+      height: 36px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      margin-top: 6px;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .bg-window-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .bg-small-btn {
+      padding: 6px 10px;
+      font-size: 0.78em;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.06);
+      color: #f5f5f5;
+      cursor: pointer;
+    }
+
+    .bg-small-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
   </style>
   <script src="./Core/live2dcubismcore.js"></script>
-  <script type="module" crossorigin src="/live2d-viewer/assets/index-B8nWo6RN.js"></script>
+  <script type="module" crossorigin src="/live2d-viewer/assets/index-wqEAWwKY.js"></script>
 </head>
 
 <body>
@@ -789,13 +974,17 @@
     <button id="toggle-expr-btn" class="ctrl-btn" title="Toggle Expressions (E)" aria-label="Toggle Expressions (E)">☹</button>
     <button id="toggle-recording-btn" class="ctrl-btn" title="Toggle Recording Controls (R)" aria-label="Toggle Recording Controls (R)">▶</button>
     <div class="ctrl-sep"></div>
-    <button id="btn-bg-picker" class="ctrl-btn" title="Background Color (B)" aria-label="Background Color (B)"><span class="bg-swatch" style="background: #000; width:18px; height:18px; border-radius:50%; display:inline-block; vertical-align:middle; margin-right:0;"></span></button>
+    <button id="btn-bg-picker" class="ctrl-btn" title="Background (B)" aria-label="Background (B)"><span class="bg-swatch" style="background: #000; width:18px; height:18px; border-radius:50%; display:inline-block; vertical-align:middle; margin-right:0;"></span></button>
     <button id="btn-reset-view" class="ctrl-btn" title="Reset View">⤾</button>
     <button id="btn-zoom-in" class="ctrl-btn" title="Zoom In">＋</button>
     <input id="bg-color-input" type="color" style="display:none;" aria-hidden="true" />
     <button id="btn-zoom-out" class="ctrl-btn" title="Zoom Out">−</button>
     <div class="ctrl-sep"></div>
     <button id="import-model-btn" class="ctrl-btn" title="Import Model Folder" aria-label="Import Model Folder">🗀</button>
+    <select id="workspace-select" class="workspace-select" title="Select active model workspace" aria-label="Select active model workspace">
+      <option value="-1">No model loaded</option>
+    </select>
+    <button id="workspace-remove-btn" class="ctrl-btn" title="Remove Current Model" aria-label="Remove Current Model" disabled>🗑</button>
   </div>
 
   <div id="motion-list-window" style="display: none;" role="dialog" aria-hidden="true">
@@ -836,6 +1025,7 @@
       <div class="window-controls">
         <button id="clear-selection-btn" class="secondary-btn">Clear Selection</button>
         <button id="merge-btn" class="primary-btn" disabled>Merge & Play</button>
+        <button id="merge-record-btn" class="primary-btn" disabled>Merge & Record</button>
       </div>
     </div>
   </div>
@@ -879,16 +1069,76 @@
     </div>
   </div>
 
+  <div id="bg-window" role="dialog" aria-hidden="true" aria-label="Background Settings">
+    <h3>Background</h3>
+    <div class="bg-mode-row">
+      <div style="font-size:0.8em; opacity:0.85; margin-bottom:4px;">Background type</div>
+      <div class="bg-mode-options">
+        <label class="bg-mode-tab" data-mode="solid">
+          <input type="radio" name="bg-mode" value="solid" id="bg-mode-solid" checked>
+          <span>Solid</span>
+        </label>
+        <label class="bg-mode-tab" data-mode="gradient">
+          <input type="radio" name="bg-mode" value="gradient" id="bg-mode-gradient">
+          <span>Gradient</span>
+        </label>
+        <label class="bg-mode-tab" data-mode="image">
+          <input type="radio" name="bg-mode" value="image" id="bg-mode-image">
+          <span>Image</span>
+        </label>
+      </div>
+    </div>
+
+    <div id="bg-section-solid" class="bg-section">
+      <div class="bg-section-header">
+        <span>Solid color</span>
+      </div>
+      <div class="bg-section-body">
+        <input id="bg-solid-color" class="bg-color-input" type="color" />
+        <span style="opacity:0.8;">Use a single flat color for the background.</span>
+      </div>
+    </div>
+
+    <div id="bg-section-gradient" class="bg-section">
+      <div class="bg-section-header">
+        <span>Gradient</span>
+      </div>
+      <div class="bg-section-body">
+        <input id="bg-grad-start" class="bg-color-input" type="color" />
+        <input id="bg-grad-end" class="bg-color-input" type="color" />
+        <input id="bg-grad-angle" class="bg-angle-input" type="range" min="0" max="360" step="5" />
+        <span style="opacity:0.8;" id="bg-grad-angle-label">Angle: 0°</span>
+      </div>
+      <div id="bg-grad-preview" class="bg-preview"></div>
+    </div>
+
+    <div id="bg-section-image" class="bg-section">
+      <div class="bg-section-header">
+        <span>Image</span>
+      </div>
+      <div class="bg-section-body">
+        <input id="bg-image-input" class="bg-image-input" type="file" accept="image/*" />
+        <button id="bg-image-clear" class="bg-small-btn" type="button">Clear</button>
+      </div>
+      <div id="bg-image-preview" class="bg-preview"></div>
+    </div>
+
+    <div class="bg-window-footer">
+      <button id="bg-close-btn" class="bg-small-btn" type="button">Close</button>
+    </div>
+  </div>
+
   <div id="recording-window" class="hidden" aria-live="polite" aria-label="Recording Controls" aria-hidden="true">
     <button id="rec-start-btn" class="rec-btn" title="Start Recording" aria-label="Start Recording">●</button>
     <button id="rec-pause-btn" class="pause-btn" title="Pause Recording" aria-label="Pause Recording" disabled>⏸</button>
     <button id="rec-stop-btn" class="stop-btn" title="Stop Recording" aria-label="Stop Recording" disabled>⏹</button>
+    <button id="rec-photo-btn" class="pause-btn" title="Take Snapshot" aria-label="Take Snapshot">⛶</button>
     <a id="rec-download-btn" class="download-btn disabled" href="#" download="live2d_recording.webm" aria-disabled="true">Download</a>
     <div class="timer" id="rec-timer">00:00</div>
     <label style="opacity:0.9;font-size:0.85em;margin-left:8px;display:flex;align-items:center;gap:8px;">
       <input id="rec-include-audio" type="checkbox" aria-label="Include app audio"> Audio
     </label>
-    <div class="note" style="opacity:0.8;font-size:0.8em;margin-left:8px;">Video only — UI remains visible and usable, but is not recorded</div>
+    <div class="note" style="opacity:0.8;font-size:0.8em;margin-left:8px;">UI is not included in the video.</div>
     <div class="rec-indicator" aria-hidden="true"></div>
   </div>
 
