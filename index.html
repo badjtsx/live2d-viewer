@@ -676,6 +676,31 @@
       cursor: not-allowed;
     }
 
+    #mobile-notice {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 99999;
+      padding: 14px 16px;
+      background: rgba(12, 12, 16, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      color: #e0e0e0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-size: 0.85em;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+    #mobile-notice span { flex: 1; }
+    #mobile-dismiss-btn {
+      background: none; border: none;
+      color: #888; cursor: pointer;
+      font-size: 1.1em; padding: 4px 8px; border-radius: 4px;
+    }
+    #mobile-dismiss-btn:hover { color: #fff; background: rgba(255,255,255,0.08); }
+
     #recording-window .timer {
       min-width: 48px;
       text-align: center;
@@ -759,42 +784,74 @@
       border-color: rgba(255, 80, 80, 0.4);
     }
 
+    /* hide standalone import on desktop (it's inside control bar there) */
+    #import-model-btn { display: none; }
+
     /* Mobile / small screens */
     @media (max-width: 768px) {
+      /* show notice banner */
+      #mobile-notice { display: flex; }
+
+      /* hide all UI panels */
+      #motion-list-window,
+      #motion-merge-window,
+      #parameter-window,
+      #parts-window,
+      #expression-list-window,
+      #lipsync-window,
+      #recording-window,
+      #bg-window,
+      #hitareas-overlay { display: none !important; }
+
+      /* keep control-bar visible as a floating FAB container for just the import button */
       #control-bar {
-        left: 0;
-        right: 0;
-        margin: 0 auto;
-        padding: 6px 8px;
-        gap: 4px;
-        flex-wrap: wrap;
-        justify-content: center;
+        display: flex !important;
+        position: fixed;
+        top: 76px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 99998;
+        background: none;
+        border: none;
+        backdrop-filter: none;
+        box-shadow: none;
+        padding: 0;
+        margin: 0;
       }
 
-      .ctrl-btn {
-        height: 40px;
-        width: 40px;
-        min-height: 40px;
-        min-width: 40px;
-        font-size: 0; /* icons only, no text */
-      }
+      /* hide all control-bar children except import button */
+      #toggle-window-btn,
+      #toggle-merge-btn,
+      #toggle-params-btn,
+      #toggle-parts-btn,
+      #toggle-expr-btn,
+      #toggle-hitareas-btn,
+      #toggle-lipsync-btn,
+      #toggle-recording-btn,
+      #btn-bg-picker,
+      #btn-reset-view,
+      #btn-zoom-in,
+      #btn-zoom-out,
+      #workspace-select,
+      #workspace-remove-btn,
+      .ctrl-sep { display: none !important; }
 
-      .ctrl-btn svg,
-      .ctrl-btn img {
-        width: 20px;
-        height: 20px;
+      /* style import button as FAB */
+      #import-model-btn {
+        display: inline-flex !important;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        font-size: 0;
+        background: rgba(var(--accent), 0.25);
+        border: 1px solid rgba(var(--accent), 0.5);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.5);
       }
+      #import-model-btn img { width: 28px; height: 28px; filter: brightness(1.2); }
 
-      .workspace-select {
-        min-width: 110px;
-        max-width: 150px;
-        font-size: 0.75em;
-      }
-
-      .app-footer {
-        padding: 8px 10px;
-        font-size: 0.7em;
-      }
+      /* canvas fills remaining viewport */
+      body > canvas:only-child { width: 100vw; height: calc(100vh - 56px - 48px); }
+      body > canvas { width: 100vw; height: calc(100vh - 56px - 48px); }
     }
 
     .ctrl-sep {
@@ -1099,10 +1156,15 @@
     }
   </style>
   <script src="./Core/live2dcubismcore.js"></script>
-  <script type="module" crossorigin src="/live2d-viewer/assets/index-ZUCZjuXE.js"></script>
+  <script type="module" crossorigin src="/assets/index-qlLwQzg2.js"></script>
 </head>
 
 <body>
+
+  <div id="mobile-notice" role="banner" aria-label="Desktop notice">
+    <span>Live2D Viewer is designed for desktop. Please open on a PC for the best experience.</span>
+    <button id="mobile-dismiss-btn" onclick="this.parentElement.style.display='none'" aria-label="Dismiss">✕</button>
+  </div>
 
   <canvas id="hitareas-overlay" aria-hidden="true"></canvas>
 
@@ -1156,6 +1218,7 @@
       <img src="data:image/svg+xml,%3csvg%20version='1.1'%20xmlns='http://www.w3.org/2000/svg'%20xmlns:xlink='http://www.w3.org/1999/xlink'%20width='20'%20height='20'%20viewBox='0%200%2024%2024'%20aria-hidden='true'%3e%3cpath%20d='M5%207h14M10%2010v7M14%2010v7'%20fill='none'%20stroke='%23fff'%20stroke-width='2'%20stroke-linecap='round'/%3e%3crect%20x='6'%20y='7'%20width='12'%20height='11'%20rx='1'%20ry='1'%20fill='none'%20stroke='%23fff'%20stroke-width='2'/%3e%3cpath%20d='M9%204h6l1%202H8l1-2z'%20fill='none'%20stroke='%23fff'%20stroke-width='2'%20stroke-linejoin='round'/%3e%3c/svg%3e" width="20" height="20" alt="" aria-hidden="true" />
     </button>
   </div>
+
 
   <div id="motion-list-window" style="display: none;" role="dialog" aria-hidden="true">
     <h3>Motion List</h3>
