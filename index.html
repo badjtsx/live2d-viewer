@@ -411,6 +411,89 @@
       letter-spacing: 0.5px;
     }
 
+    #lipsync-window {
+      position: absolute;
+      top: 40px;
+      left: 10px;
+      width: 280px;
+      max-height: 70vh;
+      background: rgba(12, 12, 16, 0.88);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 16px;
+      box-sizing: border-box;
+      z-index: 100;
+      overflow-y: auto;
+      color: white;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    #lipsync-window h3 {
+      margin: 0 0 12px 0;
+      text-align: center;
+      font-size: 1.05em;
+      font-weight: 600;
+      color: #ffffff;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+      letter-spacing: 0.5px;
+    }
+
+    .lipsync-section {
+      margin-bottom: 12px;
+      padding: 10px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.82em;
+    }
+
+    .lipsync-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .lipsync-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 0.8em;
+      margin: 6px 0 4px 0;
+      color: #d8d8d8;
+    }
+
+    .lipsync-small {
+      font-size: 0.75em;
+      opacity: 0.8;
+      color: #c9c9c9;
+    }
+
+    .lipsync-meter {
+      height: 8px;
+      width: 100%;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .lipsync-meter-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, rgba(var(--accent), 0.7), rgba(255, 140, 140, 0.9));
+      transition: width 60ms linear;
+    }
+
+    .lipsync-file-input {
+      font-size: 0.78em;
+      color: #e6e6e6;
+      max-width: 100%;
+    }
+
     #expression-list-window .expression-content {
       margin-bottom: 12px;
     }
@@ -601,8 +684,7 @@
       font-family: 'Courier New', monospace;
     }
 
-    /* subtle recording state style */
-    body.recording #recording-window {
+        body.recording #recording-window {
       box-shadow: 0 10px 32px rgba(220,20,60,0.12);
       transform: translate(-50%, -6px);
     }
@@ -618,6 +700,8 @@
     .ctrl-btn {
       height: 36px;
       width: 36px;
+      min-height: 36px;
+      min-width: 36px;
       border-radius: 50%;
       border: none;
       cursor: pointer;
@@ -628,11 +712,22 @@
       align-items: center;
       justify-content: center;
       transition: transform 120ms ease, background 120ms ease;
+      touch-action: manipulation;
     }
 
     .ctrl-btn:hover {
       transform: translateY(-2px);
       background: rgba(255, 255, 255, 0.04);
+    }
+
+    #hitareas-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 9999;
     }
 
     .workspace-select {
@@ -664,6 +759,44 @@
       border-color: rgba(255, 80, 80, 0.4);
     }
 
+    /* Mobile / small screens */
+    @media (max-width: 768px) {
+      #control-bar {
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        padding: 6px 8px;
+        gap: 4px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .ctrl-btn {
+        height: 40px;
+        width: 40px;
+        min-height: 40px;
+        min-width: 40px;
+        font-size: 0; /* icons only, no text */
+      }
+
+      .ctrl-btn svg,
+      .ctrl-btn img {
+        width: 20px;
+        height: 20px;
+      }
+
+      .workspace-select {
+        min-width: 110px;
+        max-width: 150px;
+        font-size: 0.75em;
+      }
+
+      .app-footer {
+        padding: 8px 10px;
+        font-size: 0.7em;
+      }
+    }
+
     .ctrl-sep {
       width: 1px;
       height: 24px;
@@ -676,7 +809,8 @@
     #parameter-window,
     #motion-multi-select,
     #parameter-list,
-    #expression-list-window {
+    #expression-list-window,
+    #lipsync-window {
       scrollbar-width: thin;
       scrollbar-color: rgba(255, 255, 255, 0.12) rgba(255, 255, 255, 0.02);
     }
@@ -685,7 +819,8 @@
     #parameter-window::-webkit-scrollbar,
     #motion-multi-select::-webkit-scrollbar,
     #parameter-list::-webkit-scrollbar,
-    #expression-list-window::-webkit-scrollbar {
+    #expression-list-window::-webkit-scrollbar,
+    #lipsync-window::-webkit-scrollbar {
       width: 8px;
       height: 8px;
     }
@@ -694,7 +829,8 @@
     #parameter-window::-webkit-scrollbar-track,
     #motion-multi-select::-webkit-scrollbar-track,
     #parameter-list::-webkit-scrollbar-track,
-    #expression-list-window::-webkit-scrollbar-track {
+    #expression-list-window::-webkit-scrollbar-track,
+    #lipsync-window::-webkit-scrollbar-track {
       background: rgba(255, 255, 255, 0.02);
       border-radius: 8px;
     }
@@ -703,7 +839,8 @@
     #parameter-window::-webkit-scrollbar-thumb,
     #motion-multi-select::-webkit-scrollbar-thumb,
     #parameter-list::-webkit-scrollbar-thumb,
-    #expression-list-window::-webkit-scrollbar-thumb {
+    #expression-list-window::-webkit-scrollbar-thumb,
+    #lipsync-window::-webkit-scrollbar-thumb {
       background: rgba(255, 255, 255, 0.06);
       border-radius: 8px;
       border: 1px solid rgba(255, 255, 255, 0.02);
@@ -715,7 +852,8 @@
     #parameter-window:hover::-webkit-scrollbar-thumb,
     #motion-multi-select:hover::-webkit-scrollbar-thumb,
     #parameter-list:hover::-webkit-scrollbar-thumb,
-    #expression-list-window:hover::-webkit-scrollbar-thumb {
+    #expression-list-window:hover::-webkit-scrollbar-thumb,
+    #lipsync-window:hover::-webkit-scrollbar-thumb {
       background: rgba(255, 255, 255, 0.12);
       opacity: 1.0;
     }
@@ -724,7 +862,8 @@
     #parameter-window::-webkit-scrollbar-track,
     #motion-multi-select::-webkit-scrollbar-track,
     #parameter-list::-webkit-scrollbar-track,
-    #expression-list-window::-webkit-scrollbar-track {
+    #expression-list-window::-webkit-scrollbar-track,
+    #lipsync-window::-webkit-scrollbar-track {
       background: transparent;
     }
 
@@ -808,8 +947,7 @@
       color: rgba(255, 255, 255, 0.3);
     }
 
-    /* Background settings window */
-    #bg-window {
+        #bg-window {
       position: absolute;
       top: 40px;
       left: 50%;
@@ -961,30 +1099,62 @@
     }
   </style>
   <script src="./Core/live2dcubismcore.js"></script>
-  <script type="module" crossorigin src="/live2d-viewer/assets/index-wqEAWwKY.js"></script>
+  <script type="module" crossorigin src="/live2d-viewer/assets/index-ZUCZjuXE.js"></script>
 </head>
 
 <body>
 
+  <canvas id="hitareas-overlay" aria-hidden="true"></canvas>
+
   <div id="control-bar" aria-hidden="false">
-    <button id="toggle-window-btn" class="ctrl-btn" title="Toggle Motions (M)" aria-label="Toggle Motions (M)">🎞</button>
-    <button id="toggle-merge-btn" class="ctrl-btn" title="Toggle Motion Merge (N)" aria-label="Toggle Motion Merge (N)">🖇</button>
-    <button id="toggle-params-btn" class="ctrl-btn" title="Toggle Parameters (P)" aria-label="Toggle Parameters (P)">⚙︎</button>
-    <button id="toggle-parts-btn" class="ctrl-btn" title="Toggle Parts (T)" aria-label="Toggle Parts (T)">🛠</button>
-    <button id="toggle-expr-btn" class="ctrl-btn" title="Toggle Expressions (E)" aria-label="Toggle Expressions (E)">☹</button>
-    <button id="toggle-recording-btn" class="ctrl-btn" title="Toggle Recording Controls (R)" aria-label="Toggle Recording Controls (R)">▶</button>
-    <div class="ctrl-sep"></div>
-    <button id="btn-bg-picker" class="ctrl-btn" title="Background (B)" aria-label="Background (B)"><span class="bg-swatch" style="background: #000; width:18px; height:18px; border-radius:50%; display:inline-block; vertical-align:middle; margin-right:0;"></span></button>
+    <button id="toggle-window-btn" class="ctrl-btn" title="Toggle Motions (M)" aria-label="Toggle Motions (M)">
+      <img src="data:image/svg+xml,%3csvg%20width='20'%20height='20'%20viewBox='0%200%2016%2016'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M9.99994%201.5C9.99994%202.32843%209.32837%203%208.49994%203C7.67151%203%206.99994%202.32843%206.99994%201.5C6.99994%200.671573%207.67151%200%208.49994%200C9.32837%200%209.99994%200.671573%209.99994%201.5Z'%20fill='%23fff'/%3e%3cpath%20d='M2.8312%205.45056C3.07651%204.59195%203.86128%204%204.75424%204H7.73601L10.5455%205.40474L12.6286%204.57152L13.3713%206.42848L11.2883%207.2617C10.7579%207.47386%2010.162%207.44908%209.65107%207.1936L9.50107%207.1186L8.96631%209.2576L9.83834%209.75591C10.6163%2010.2005%2011.0037%2011.1082%2010.7864%2011.9775L9.78072%2016H7.71917L8.84607%2011.4924L7.14993%2010.5232L5.78072%2016H3.71917L6.21917%206H4.75424L4.18281%208H2.10278L2.8312%205.45056Z'%20fill='%23fff'/%3e%3c/svg%3e" width="20" height="20" alt="" aria-hidden="true" />
+    </button>
+    
+    <button id="toggle-merge-btn" class="ctrl-btn" title="Toggle Motion Merge (N)" aria-label="Toggle Motion Merge (N)">
+      <img src="data:image/svg+xml,%3csvg%20version='1.1'%20xmlns='http://www.w3.org/2000/svg'%20xmlns:xlink='http://www.w3.org/1999/xlink'%20width='20'%20height='20'%20viewBox='0%200%2032%2032'%20xml:space='preserve'%3e%3cstyle%20type='text/css'%3e%20.linesandangles_een{fill:%23fff;}%20.st0{fill:%23fff;}%20%3c/style%3e%3cpath%20class='linesandangles_een'%20d='M25,4v4.101c0,2.137-0.832,4.146-2.343,5.657l-3.9,3.899c-0.477,0.477-0.858,1.023-1.146,1.612%20c-0.232-0.764-0.573-1.49-1.003-2.168c0.225-0.299,0.465-0.589,0.734-0.858l3.9-3.899C22.376,11.21,23,9.703,23,8.101V4H25z%20M17,25.586v-3.687c0-2.137-0.832-4.146-2.343-5.657l-3.9-3.899C9.624,11.21,9,9.703,9,8.101V4H7v4.101%20c0,2.137,0.832,4.146,2.343,5.657l3.9,3.899C14.376,18.79,15,20.297,15,21.899v3.687l-2.293-2.293l-1.414,1.414L16,29.414%20l4.707-4.707l-1.414-1.414L17,25.586z'/%3e%3c/svg%3e" width="20" height="20" alt="" aria-hidden="true" />
+    </button>
+    
+    <button id="toggle-params-btn" class="ctrl-btn" title="Toggle Parameters (P)" aria-label="Toggle Parameters (P)">
+      <img src="data:image/svg+xml,%3csvg%20width='20'%20height='20'%20viewBox='-0.5%200%2025%2025'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M12%207.82001H22'%20stroke='%23fff'%20stroke-width='1.5'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3cpath%20d='M2%207.82001H4'%20stroke='%23fff'%20stroke-width='1.5'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3cpath%20d='M20%2016.82H22'%20stroke='%23fff'%20stroke-width='1.5'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3cpath%20d='M2%2016.82H12'%20stroke='%23fff'%20stroke-width='1.5'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3cpath%20d='M8%2011.82C10.2091%2011.82%2012%2010.0291%2012%207.82001C12%205.61087%2010.2091%203.82001%208%203.82001C5.79086%203.82001%204%205.61087%204%207.82001C4%2010.0291%205.79086%2011.82%208%2011.82Z'%20stroke='%23fff'%20stroke-width='1.5'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3cpath%20d='M16%2020.82C18.2091%2020.82%2020%2019.0291%2020%2016.82C20%2014.6109%2018.2091%2012.82%2016%2012.82C13.7909%2012.82%2012%2014.6109%2012%2016.82C12%2019.0291%2013.7909%2020.82%2016%2020.82Z'%20stroke='%23fff'%20stroke-width='1.5'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/svg%3e" width="20" height="20" alt="" aria-hidden="true" />
+    </button>
+    
+    <button id="toggle-parts-btn" class="ctrl-btn" title="Toggle Parts (T)" aria-label="Toggle Parts (T)">
+      <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='utf-8'?%3e%3csvg%20width='800px'%20height='800px'%20viewBox='0%200%2024%2024'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3ccircle%20cx='12'%20cy='12'%20r='3'%20stroke='%23fff'%20stroke-width='1.5'/%3e%3cpath%20d='M3.66122%2010.6392C4.13377%2010.9361%204.43782%2011.4419%204.43782%2011.9999C4.43781%2012.558%204.13376%2013.0638%203.66122%2013.3607C3.33966%2013.5627%203.13248%2013.7242%202.98508%2013.9163C2.66217%2014.3372%202.51966%2014.869%202.5889%2015.3949C2.64082%2015.7893%202.87379%2016.1928%203.33973%2016.9999C3.80568%2017.8069%204.03865%2018.2104%204.35426%2018.4526C4.77508%2018.7755%205.30694%2018.918%205.83284%2018.8488C6.07287%2018.8172%206.31628%2018.7185%206.65196%2018.5411C7.14544%2018.2803%207.73558%2018.2699%208.21895%2018.549C8.70227%2018.8281%208.98827%2019.3443%209.00912%2019.902C9.02332%2020.2815%209.05958%2020.5417%209.15224%2020.7654C9.35523%2021.2554%209.74458%2021.6448%2010.2346%2021.8478C10.6022%2022%2011.0681%2022%2012%2022C12.9319%2022%2013.3978%2022%2013.7654%2021.8478C14.2554%2021.6448%2014.6448%2021.2554%2014.8478%2020.7654C14.9404%2020.5417%2014.9767%2020.2815%2014.9909%2019.9021C15.0117%2019.3443%2015.2977%2018.8281%2015.7811%2018.549C16.2644%2018.27%2016.8545%2018.2804%2017.3479%2018.5412C17.6837%2018.7186%2017.9271%2018.8173%2018.1671%2018.8489C18.693%2018.9182%2019.2249%2018.7756%2019.6457%2018.4527C19.9613%2018.2106%2020.1943%2017.807%2020.6603%2017C20.8677%2016.6407%2021.029%2016.3614%2021.1486%2016.1272M20.3387%2013.3608C19.8662%2013.0639%2019.5622%2012.5581%2019.5621%2012.0001C19.5621%2011.442%2019.8662%2010.9361%2020.3387%2010.6392C20.6603%2010.4372%2020.8674%2010.2757%2021.0148%2010.0836C21.3377%209.66278%2021.4802%209.13092%2021.411%208.60502C21.3591%208.2106%2021.1261%207.80708%2020.6601%207.00005C20.1942%206.19301%2019.9612%205.7895%2019.6456%205.54732C19.2248%205.22441%2018.6929%205.0819%2018.167%205.15113C17.927%205.18274%2017.6836%205.2814%2017.3479%205.45883C16.8544%205.71964%2016.2643%205.73004%2015.781%205.45096C15.2977%205.1719%2015.0117%204.6557%2014.9909%204.09803C14.9767%203.71852%2014.9404%203.45835%2014.8478%203.23463C14.6448%202.74458%2014.2554%202.35523%2013.7654%202.15224C13.3978%202%2012.9319%202%2012%202C11.0681%202%2010.6022%202%2010.2346%202.15224C9.74458%202.35523%209.35523%202.74458%209.15224%203.23463C9.05958%203.45833%209.02332%203.71848%209.00912%204.09794C8.98826%204.65566%208.70225%205.17191%208.21891%205.45096C7.73557%205.73002%207.14548%205.71959%206.65205%205.4588C6.31633%205.28136%206.0729%205.18269%205.83285%205.15108C5.30695%205.08185%204.77509%205.22436%204.35427%205.54727C4.03866%205.78945%203.80569%206.19297%203.33974%207C3.13231%207.35929%202.97105%207.63859%202.85138%207.87273'%20stroke='%23fff'%20stroke-width='1.5'%20stroke-linecap='round'/%3e%3c/svg%3e" width="20" height="20" alt="" aria-hidden="true" />
+    </button>
+    
+    <button id="toggle-expr-btn" class="ctrl-btn" title="Toggle Expressions (E)" aria-label="Toggle Expressions (E)">
+      <img src="data:image/svg+xml,%3csvg%20version='1.1'%20xmlns='http://www.w3.org/2000/svg'%20xmlns:xlink='http://www.w3.org/1999/xlink'%20width='20'%20height='20'%20viewBox='0%200%2024%2024'%20aria-hidden='true'%3e%3ccircle%20cx='12'%20cy='12'%20r='8'%20fill='none'%20stroke='%23fff'%20stroke-width='2'/%3e%3ccircle%20cx='9'%20cy='10'%20r='0.9'%20fill='%23fff'/%3e%3ccircle%20cx='15'%20cy='10'%20r='0.9'%20fill='%23fff'/%3e%3cpath%20d='M9%2015c.7.7%201.6%201.1%203%201.1s2.3-.4%203-1.1'%20fill='none'%20stroke='%23fff'%20stroke-width='2'%20stroke-linecap='round'/%3e%3c/svg%3e" width="20" height="20" alt="" aria-hidden="true" />
+    </button>
+    
+    <button id="toggle-hitareas-btn" class="ctrl-btn" title="Toggle Hit Areas (H)" aria-label="Toggle Hit Areas (H)">
+      <img src="data:image/svg+xml,%3csvg%20version='1.1'%20xmlns='http://www.w3.org/2000/svg'%20xmlns:xlink='http://www.w3.org/1999/xlink'%20width='20'%20height='20'%20viewBox='0%200%2024%2024'%20aria-hidden='true'%3e%3ccircle%20cx='12'%20cy='12'%20r='7'%20fill='none'%20stroke='%23fff'%20stroke-width='2'/%3e%3ccircle%20cx='12'%20cy='12'%20r='3'%20fill='none'%20stroke='%23fff'%20stroke-width='2'/%3e%3cline%20x1='12'%20y1='3'%20x2='12'%20y2='1'%20stroke='%23fff'%20stroke-width='2'%20stroke-linecap='round'/%3e%3cline%20x1='21'%20y1='12'%20x2='23'%20y2='12'%20stroke='%23fff'%20stroke-width='2'%20stroke-linecap='round'/%3e%3cline%20x1='12'%20y1='21'%20x2='12'%20y2='23'%20stroke='%23fff'%20stroke-width='2'%20stroke-linecap='round'/%3e%3cline%20x1='3'%20y1='12'%20x2='1'%20y2='12'%20stroke='%23fff'%20stroke-width='2'%20stroke-linecap='round'/%3e%3c/svg%3e" width="20" height="20" alt="" aria-hidden="true" />
+    </button>
+    
+    <button id="toggle-lipsync-btn" class="ctrl-btn" title="Lip Sync (L)" aria-label="Lip Sync (L)">
+      <img src="data:image/svg+xml,%3csvg%20version='1.1'%20xmlns='http://www.w3.org/2000/svg'%20xmlns:xlink='http://www.w3.org/1999/xlink'%20width='20'%20height='20'%20viewBox='0%200%2024%2024'%20aria-hidden='true'%3e%3crect%20x='9'%20y='4'%20width='6'%20height='9'%20rx='3'%20ry='3'%20fill='none'%20stroke='%23fff'%20stroke-width='2'/%3e%3cpath%20d='M7%2011v1a5%205%200%200%200%2010%200v-1'%20fill='none'%20stroke='%23fff'%20stroke-width='2'%20stroke-linecap='round'/%3e%3cline%20x1='12'%20y1='17'%20x2='12'%20y2='20'%20stroke='%23fff'%20stroke-width='2'%20stroke-linecap='round'/%3e%3cline%20x1='9'%20y1='20'%20x2='15'%20y2='20'%20stroke='%23fff'%20stroke-width='2'%20stroke-linecap='round'/%3e%3c/svg%3e" width="20" height="20" alt="" aria-hidden="true" />
+    </button>
+    
+    <button id="toggle-recording-btn" class="ctrl-btn" title="Toggle Recording Controls (R)" aria-label="Toggle Recording Controls (R)">
+      <img src="data:image/svg+xml,%3csvg%20version='1.1'%20xmlns='http://www.w3.org/2000/svg'%20xmlns:xlink='http://www.w3.org/1999/xlink'%20width='20'%20height='20'%20viewBox='0%200%2024%2024'%20aria-hidden='true'%3e%3crect%20x='4'%20y='6'%20width='11'%20height='12'%20rx='2'%20ry='2'%20fill='none'%20stroke='%23fff'%20stroke-width='2'/%3e%3cpolygon%20points='17,9%2021,7%2021,17%2017,15'%20fill='none'%20stroke='%23fff'%20stroke-width='2'%20stroke-linejoin='round'/%3e%3c/svg%3e" width="20" height="20" alt="" aria-hidden="true" />
+    </button>
+
+    <button id="btn-bg-picker" class="ctrl-btn" title="Background Color (B)" aria-label="Background Color (B)"><span class="bg-swatch" style="background: #000; width:18px; height:18px; border-radius:50%; display:inline-block; vertical-align:middle; margin-right:0;"></span></button>
+
     <button id="btn-reset-view" class="ctrl-btn" title="Reset View">⤾</button>
     <button id="btn-zoom-in" class="ctrl-btn" title="Zoom In">＋</button>
     <input id="bg-color-input" type="color" style="display:none;" aria-hidden="true" />
     <button id="btn-zoom-out" class="ctrl-btn" title="Zoom Out">−</button>
     <div class="ctrl-sep"></div>
-    <button id="import-model-btn" class="ctrl-btn" title="Import Model Folder" aria-label="Import Model Folder">🗀</button>
+    <button id="import-model-btn" class="ctrl-btn" title="Import Model Folder" aria-label="Import Model Folder">
+      <img src="data:image/svg+xml,%3csvg%20version='1.1'%20xmlns='http://www.w3.org/2000/svg'%20xmlns:xlink='http://www.w3.org/1999/xlink'%20width='20'%20height='20'%20viewBox='0%200%2024%2024'%20aria-hidden='true'%3e%3cpath%20d='M3%207h5l2%202h11v8a2%202%200%200%201-2%202H5a2%202%200%200%201-2-2V7z'%20fill='none'%20stroke='%23fff'%20stroke-width='2'%20stroke-linejoin='round'/%3e%3cpath%20d='M12%2010v6M9.5%2013.5L12%2016l2.5-2.5'%20fill='none'%20stroke='%23fff'%20stroke-width='2'%20stroke-linecap='round'/%3e%3c/svg%3e" width="20" height="20" alt="" aria-hidden="true" />
+    </button>
     <select id="workspace-select" class="workspace-select" title="Select active model workspace" aria-label="Select active model workspace">
       <option value="-1">No model loaded</option>
     </select>
-    <button id="workspace-remove-btn" class="ctrl-btn" title="Remove Current Model" aria-label="Remove Current Model" disabled>🗑</button>
+    <button id="workspace-remove-btn" class="ctrl-btn" title="Remove Current Model" aria-label="Remove Current Model" disabled>
+      <img src="data:image/svg+xml,%3csvg%20version='1.1'%20xmlns='http://www.w3.org/2000/svg'%20xmlns:xlink='http://www.w3.org/1999/xlink'%20width='20'%20height='20'%20viewBox='0%200%2024%2024'%20aria-hidden='true'%3e%3cpath%20d='M5%207h14M10%2010v7M14%2010v7'%20fill='none'%20stroke='%23fff'%20stroke-width='2'%20stroke-linecap='round'/%3e%3crect%20x='6'%20y='7'%20width='12'%20height='11'%20rx='1'%20ry='1'%20fill='none'%20stroke='%23fff'%20stroke-width='2'/%3e%3cpath%20d='M9%204h6l1%202H8l1-2z'%20fill='none'%20stroke='%23fff'%20stroke-width='2'%20stroke-linejoin='round'/%3e%3c/svg%3e" width="20" height="20" alt="" aria-hidden="true" />
+    </button>
   </div>
 
   <div id="motion-list-window" style="display: none;" role="dialog" aria-hidden="true">
@@ -1065,6 +1235,77 @@
       <div class="window-controls">
         <button id="expr-random-btn" class="refresh-btn">Random</button>
         <button id="expr-reset-btn" class="refresh-btn">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="lipsync-window" style="display: none;" role="dialog" aria-hidden="true">
+    <h3>Lip Sync</h3>
+    <div class="window-content">
+      <div class="scrollable-content">
+        <div class="lipsync-section">
+          <div class="lipsync-row" style="justify-content: space-between;">
+            <label style="display:flex; align-items:center; gap:6px;">
+              <input id="lipsync-enable" type="checkbox" />
+              <span>Enable</span>
+            </label>
+            <span id="lipsync-status" class="lipsync-small">Idle</span>
+          </div>
+          <div class="lipsync-meter">
+            <div id="lipsync-meter-fill" class="lipsync-meter-fill"></div>
+          </div>
+        </div>
+
+        <div class="lipsync-section">
+          <div class="lipsync-row">
+            <label style="display:flex; align-items:center; gap:6px;">
+              <input id="lipsync-source-mic" type="radio" name="lipsync-source" value="mic" checked />
+              <span>Microphone</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:6px;">
+              <input id="lipsync-source-file" type="radio" name="lipsync-source" value="file" />
+              <span>Audio file</span>
+            </label>
+          </div>
+          <div id="lipsync-mic-controls" class="lipsync-row">
+            <button id="lipsync-mic-btn" class="primary-btn">Start Mic</button>
+            <span id="lipsync-mic-status" class="lipsync-small">Not started</span>
+          </div>
+          <div id="lipsync-file-controls" class="lipsync-row" style="display:none;">
+            <input id="lipsync-file-input" class="lipsync-file-input" type="file" accept="audio/*" />
+            <button id="lipsync-file-play" class="secondary-btn" disabled>Play</button>
+            <button id="lipsync-file-stop" class="secondary-btn" disabled>Stop</button>
+            <span id="lipsync-file-name" class="lipsync-small">No file loaded</span>
+          </div>
+        </div>
+
+        <div class="lipsync-section">
+          <label class="lipsync-label">
+            <span>Sensitivity</span>
+            <span id="lipsync-sensitivity-val">2.20x</span>
+          </label>
+          <input id="lipsync-sensitivity" class="parameter-slider" type="range" min="0.5" max="3" step="0.05" value="2.2" />
+
+          <label class="lipsync-label">
+            <span>Smoothing</span>
+            <span id="lipsync-smoothing-val">0.70</span>
+          </label>
+          <input id="lipsync-smoothing" class="parameter-slider" type="range" min="0" max="0.95" step="0.01" value="0.70" />
+
+          <label class="lipsync-label">
+            <span>Gate</span>
+            <span id="lipsync-gate-val">0.005</span>
+          </label>
+          <input id="lipsync-gate" class="parameter-slider" type="range" min="0" max="0.1" step="0.005" value="0.005" />
+        </div>
+
+        <div class="lipsync-section">
+          <div class="lipsync-small">Target params: <span id="lipsync-targets">auto</span></div>
+        </div>
+      </div>
+      <div class="window-controls">
+        <button id="lipsync-refresh-btn" class="refresh-btn">Re-detect Params</button>
+        <button id="lipsync-disable-btn" class="secondary-btn">Disable</button>
       </div>
     </div>
   </div>
