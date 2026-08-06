@@ -4,12 +4,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Live2D model viewer with motion playback, parameter control, and recording capabilities">
-  <meta property="og:title" content="Live2D Viewer">
-  <meta property="og:description" content="Online Live2D model viewer and animation tool">
+  <meta name="description" data-i18n-content="seo.desc" content="Live2D model viewer with motion playback, parameter control, and recording capabilities">
+  <meta property="og:title" data-i18n-content="app.title" content="Live2D Viewer">
+  <meta property="og:description" data-i18n-content="seo.ogDesc" content="Online Live2D model viewer and animation tool">
   <meta property="og:type" content="website">
+  <link rel="alternate" hreflang="en" href="https://live2d-viewer.pages.dev/">
+  <link rel="alternate" hreflang="ja" href="https://live2d-viewer.pages.dev/">
+  <link rel="alternate" hreflang="zh-Hans" href="https://live2d-viewer.pages.dev/">
+  <link rel="alternate" hreflang="zh-Hant" href="https://live2d-viewer.pages.dev/">
+  <link rel="alternate" hreflang="ko" href="https://live2d-viewer.pages.dev/">
+  <link rel="alternate" hreflang="x-default" href="https://live2d-viewer.pages.dev/">
   <script defer src="https://cloud.umami.is/script.js" data-website-id="af37bba4-341c-47ac-b068-b3e0556ee208"></script>
-  <title>Live2D Viewer</title>
+  <title data-i18n="app.title">Live2D Viewer</title>
   <style>
     :root{
       --accent: 160,160,165; 
@@ -676,6 +682,112 @@
       cursor: not-allowed;
     }
 
+    #recording-window .rec-settings-btn {
+      width: 38px;
+      height: 38px;
+      min-width: 38px;
+      min-height: 38px;
+      aspect-ratio: 1 / 1;
+      box-sizing: border-box;
+      padding: 0;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+    }
+
+    #recording-window .rec-settings-btn[aria-pressed='true'] {
+      background: rgba(var(--accent), 0.2);
+      border-color: rgba(var(--accent), 0.45);
+    }
+
+    #recording-settings-panel {
+      position: fixed;
+      bottom: 132px;
+      left: 50%;
+      transform: translate(-50%, 0);
+      z-index: 141;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 220px;
+      padding: 14px 16px;
+      background: rgba(18, 18, 24, 0.82);
+      backdrop-filter: blur(14px);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #f6ffff;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-size: 0.88em;
+      transition: opacity 160ms ease, transform 160ms ease;
+      opacity: 1;
+    }
+
+    #recording-settings-panel.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, 8px);
+    }
+
+    #recording-settings-panel .rec-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    #recording-settings-panel .rec-option input[type='checkbox'] {
+      order: -1;
+      accent-color: var(--accent, #4ea1ff);
+      width: 15px;
+      height: 15px;
+      cursor: pointer;
+    }
+
+    #recording-settings-panel select {
+      appearance: none;
+      -webkit-appearance: none;
+      background-color: rgba(255, 255, 255, 0.07);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23aab2c0'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 9px center;
+      color: #f6ffff;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      padding: 6px 28px 6px 12px;
+      font-size: 0.88em;
+      font-family: inherit;
+      cursor: pointer;
+      transition: border-color 120ms ease, background-color 120ms ease;
+    }
+
+    #recording-settings-panel select:hover {
+      background-color: rgba(255, 255, 255, 0.12);
+      border-color: rgba(var(--accent), 0.5);
+    }
+
+    #recording-settings-panel select:focus-visible {
+      outline: none;
+      border-color: rgba(var(--accent), 0.7);
+      box-shadow: 0 0 0 3px rgba(var(--accent), 0.18);
+    }
+
+    #recording-settings-panel select option {
+      background-color: #18181f;
+      color: #f6ffff;
+    }
+
+    #recording-settings-panel .rec-note {
+      opacity: 0.7;
+      font-size: 0.78em;
+      padding-top: 6px;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
     #mobile-notice {
       display: none;
       position: fixed;
@@ -798,6 +910,7 @@
       #expression-list-window,
       #lipsync-window,
       #recording-window,
+      #recording-settings-panel,
       #bg-window,
       #hitareas-overlay { display: none !important; }
 
@@ -832,6 +945,7 @@
       #btn-zoom-out,
       #workspace-select,
       #workspace-remove-btn,
+      #locale-select,
       .ctrl-sep { display: none !important; }
 
       /* style import button as FAB */
@@ -1154,72 +1268,74 @@
     }
   </style>
   <script src="./Core/live2dcubismcore.js"></script>
-  <script type="module" crossorigin src="/live2d-viewer/assets/index-C63NxPFq.js"></script>
+  <script type="module" crossorigin src="/live2d-viewer/assets/index-DTF5xj2X.js"></script>
 </head>
 
 <body>
 
   <div id="mobile-notice" role="banner" aria-label="Desktop notice">
-    <span>Live2D Viewer is designed for desktop. Please open on a PC for the best experience.</span>
-    <button id="mobile-dismiss-btn" onclick="this.parentElement.style.display='none'" aria-label="Dismiss">✕</button>
+    <span data-i18n="mobile.notice">Live2D Viewer is designed for desktop. Please open on a PC for the best experience.</span>
+    <button id="mobile-dismiss-btn" onclick="this.parentElement.style.display='none'" data-i18n-aria-label="mobile.dismiss" aria-label="Dismiss">✕</button>
   </div>
 
   <canvas id="hitareas-overlay" aria-hidden="true"></canvas>
 
   <div id="control-bar" aria-hidden="false">
-    <button id="toggle-window-btn" class="ctrl-btn" title="Toggle Motions (M)" aria-label="Toggle Motions (M)">
+    <button id="toggle-window-btn" class="ctrl-btn" data-i18n-title="ctrl.toggleMotions" title="Toggle Motions (M)" aria-label="Toggle Motions (M)">
       <img src="data:image/svg+xml,%3csvg%20width='20'%20height='20'%20viewBox='0%200%2016%2016'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M9.99994%201.5C9.99994%202.32843%209.32837%203%208.49994%203C7.67151%203%206.99994%202.32843%206.99994%201.5C6.99994%200.671573%207.67151%200%208.49994%200C9.32837%200%209.99994%200.671573%209.99994%201.5Z'%20fill='%23fff'/%3e%3cpath%20d='M2.8312%205.45056C3.07651%204.59195%203.86128%204%204.75424%204H7.73601L10.5455%205.40474L12.6286%204.57152L13.3713%206.42848L11.2883%207.2617C10.7579%207.47386%2010.162%207.44908%209.65107%207.1936L9.50107%207.1186L8.96631%209.2576L9.83834%209.75591C10.6163%2010.2005%2011.0037%2011.1082%2010.7864%2011.9775L9.78072%2016H7.71917L8.84607%2011.4924L7.14993%2010.5232L5.78072%2016H3.71917L6.21917%206H4.75424L4.18281%208H2.10278L2.8312%205.45056Z'%20fill='%23fff'/%3e%3c/svg%3e" width="20" height="20" alt="" aria-hidden="true" />
     </button>
     
-    <button id="toggle-merge-btn" class="ctrl-btn" title="Toggle Motion Merge (N)" aria-label="Toggle Motion Merge (N)">
+    <button id="toggle-merge-btn" class="ctrl-btn" data-i18n-title="ctrl.toggleMerge" title="Toggle Motion Merge (N)" aria-label="Toggle Motion Merge (N)">
       <img src="data:image/svg+xml,%3csvg%20version='1.1'%20xmlns='http://www.w3.org/2000/svg'%20xmlns:xlink='http://www.w3.org/1999/xlink'%20width='20'%20height='20'%20viewBox='0%200%2032%2032'%20xml:space='preserve'%3e%3cstyle%20type='text/css'%3e%20.linesandangles_een{fill:%23fff;}%20.st0{fill:%23fff;}%20%3c/style%3e%3cpath%20class='linesandangles_een'%20d='M25,4v4.101c0,2.137-0.832,4.146-2.343,5.657l-3.9,3.899c-0.477,0.477-0.858,1.023-1.146,1.612%20c-0.232-0.764-0.573-1.49-1.003-2.168c0.225-0.299,0.465-0.589,0.734-0.858l3.9-3.899C22.376,11.21,23,9.703,23,8.101V4H25z%20M17,25.586v-3.687c0-2.137-0.832-4.146-2.343-5.657l-3.9-3.899C9.624,11.21,9,9.703,9,8.101V4H7v4.101%20c0,2.137,0.832,4.146,2.343,5.657l3.9,3.899C14.376,18.79,15,20.297,15,21.899v3.687l-2.293-2.293l-1.414,1.414L16,29.414%20l4.707-4.707l-1.414-1.414L17,25.586z'/%3e%3c/svg%3e" width="20" height="20" alt="" aria-hidden="true" />
     </button>
     
-    <button id="toggle-params-btn" class="ctrl-btn" title="Toggle Parameters (P)" aria-label="Toggle Parameters (P)">
+    <button id="toggle-params-btn" class="ctrl-btn" data-i18n-title="ctrl.toggleParams" title="Toggle Parameters (P)" aria-label="Toggle Parameters (P)">
       <img src="data:image/svg+xml,%3csvg%20width='20'%20height='20'%20viewBox='-0.5%200%2025%2025'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M12%207.82001H22'%20stroke='%23fff'%20stroke-width='1.5'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3cpath%20d='M2%207.82001H4'%20stroke='%23fff'%20stroke-width='1.5'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3cpath%20d='M20%2016.82H22'%20stroke='%23fff'%20stroke-width='1.5'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3cpath%20d='M2%2016.82H12'%20stroke='%23fff'%20stroke-width='1.5'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3cpath%20d='M8%2011.82C10.2091%2011.82%2012%2010.0291%2012%207.82001C12%205.61087%2010.2091%203.82001%208%203.82001C5.79086%203.82001%204%205.61087%204%207.82001C4%2010.0291%205.79086%2011.82%208%2011.82Z'%20stroke='%23fff'%20stroke-width='1.5'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3cpath%20d='M16%2020.82C18.2091%2020.82%2020%2019.0291%2020%2016.82C20%2014.6109%2018.2091%2012.82%2016%2012.82C13.7909%2012.82%2012%2014.6109%2012%2016.82C12%2019.0291%2013.7909%2020.82%2016%2020.82Z'%20stroke='%23fff'%20stroke-width='1.5'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/svg%3e" width="20" height="20" alt="" aria-hidden="true" />
     </button>
     
-    <button id="toggle-parts-btn" class="ctrl-btn" title="Toggle Parts (T)" aria-label="Toggle Parts (T)">
+    <button id="toggle-parts-btn" class="ctrl-btn" data-i18n-title="ctrl.toggleParts" title="Toggle Parts (T)" aria-label="Toggle Parts (T)">
       <img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='utf-8'?%3e%3csvg%20width='800px'%20height='800px'%20viewBox='0%200%2024%2024'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3ccircle%20cx='12'%20cy='12'%20r='3'%20stroke='%23fff'%20stroke-width='1.5'/%3e%3cpath%20d='M3.66122%2010.6392C4.13377%2010.9361%204.43782%2011.4419%204.43782%2011.9999C4.43781%2012.558%204.13376%2013.0638%203.66122%2013.3607C3.33966%2013.5627%203.13248%2013.7242%202.98508%2013.9163C2.66217%2014.3372%202.51966%2014.869%202.5889%2015.3949C2.64082%2015.7893%202.87379%2016.1928%203.33973%2016.9999C3.80568%2017.8069%204.03865%2018.2104%204.35426%2018.4526C4.77508%2018.7755%205.30694%2018.918%205.83284%2018.8488C6.07287%2018.8172%206.31628%2018.7185%206.65196%2018.5411C7.14544%2018.2803%207.73558%2018.2699%208.21895%2018.549C8.70227%2018.8281%208.98827%2019.3443%209.00912%2019.902C9.02332%2020.2815%209.05958%2020.5417%209.15224%2020.7654C9.35523%2021.2554%209.74458%2021.6448%2010.2346%2021.8478C10.6022%2022%2011.0681%2022%2012%2022C12.9319%2022%2013.3978%2022%2013.7654%2021.8478C14.2554%2021.6448%2014.6448%2021.2554%2014.8478%2020.7654C14.9404%2020.5417%2014.9767%2020.2815%2014.9909%2019.9021C15.0117%2019.3443%2015.2977%2018.8281%2015.7811%2018.549C16.2644%2018.27%2016.8545%2018.2804%2017.3479%2018.5412C17.6837%2018.7186%2017.9271%2018.8173%2018.1671%2018.8489C18.693%2018.9182%2019.2249%2018.7756%2019.6457%2018.4527C19.9613%2018.2106%2020.1943%2017.807%2020.6603%2017C20.8677%2016.6407%2021.029%2016.3614%2021.1486%2016.1272M20.3387%2013.3608C19.8662%2013.0639%2019.5622%2012.5581%2019.5621%2012.0001C19.5621%2011.442%2019.8662%2010.9361%2020.3387%2010.6392C20.6603%2010.4372%2020.8674%2010.2757%2021.0148%2010.0836C21.3377%209.66278%2021.4802%209.13092%2021.411%208.60502C21.3591%208.2106%2021.1261%207.80708%2020.6601%207.00005C20.1942%206.19301%2019.9612%205.7895%2019.6456%205.54732C19.2248%205.22441%2018.6929%205.0819%2018.167%205.15113C17.927%205.18274%2017.6836%205.2814%2017.3479%205.45883C16.8544%205.71964%2016.2643%205.73004%2015.781%205.45096C15.2977%205.1719%2015.0117%204.6557%2014.9909%204.09803C14.9767%203.71852%2014.9404%203.45835%2014.8478%203.23463C14.6448%202.74458%2014.2554%202.35523%2013.7654%202.15224C13.3978%202%2012.9319%202%2012%202C11.0681%202%2010.6022%202%2010.2346%202.15224C9.74458%202.35523%209.35523%202.74458%209.15224%203.23463C9.05958%203.45833%209.02332%203.71848%209.00912%204.09794C8.98826%204.65566%208.70225%205.17191%208.21891%205.45096C7.73557%205.73002%207.14548%205.71959%206.65205%205.4588C6.31633%205.28136%206.0729%205.18269%205.83285%205.15108C5.30695%205.08185%204.77509%205.22436%204.35427%205.54727C4.03866%205.78945%203.80569%206.19297%203.33974%207C3.13231%207.35929%202.97105%207.63859%202.85138%207.87273'%20stroke='%23fff'%20stroke-width='1.5'%20stroke-linecap='round'/%3e%3c/svg%3e" width="20" height="20" alt="" aria-hidden="true" />
     </button>
     
-    <button id="toggle-expr-btn" class="ctrl-btn" title="Toggle Expressions (E)" aria-label="Toggle Expressions (E)">
+    <button id="toggle-expr-btn" class="ctrl-btn" data-i18n-title="ctrl.toggleExpressions" title="Toggle Expressions (E)" aria-label="Toggle Expressions (E)">
       <img src="data:image/svg+xml,%3csvg%20version='1.1'%20xmlns='http://www.w3.org/2000/svg'%20xmlns:xlink='http://www.w3.org/1999/xlink'%20width='20'%20height='20'%20viewBox='0%200%2024%2024'%20aria-hidden='true'%3e%3ccircle%20cx='12'%20cy='12'%20r='8'%20fill='none'%20stroke='%23fff'%20stroke-width='2'/%3e%3ccircle%20cx='9'%20cy='10'%20r='0.9'%20fill='%23fff'/%3e%3ccircle%20cx='15'%20cy='10'%20r='0.9'%20fill='%23fff'/%3e%3cpath%20d='M9%2015c.7.7%201.6%201.1%203%201.1s2.3-.4%203-1.1'%20fill='none'%20stroke='%23fff'%20stroke-width='2'%20stroke-linecap='round'/%3e%3c/svg%3e" width="20" height="20" alt="" aria-hidden="true" />
     </button>
     
-    <button id="toggle-hitareas-btn" class="ctrl-btn" title="Toggle Hit Areas (H)" aria-label="Toggle Hit Areas (H)">
+    <button id="toggle-hitareas-btn" class="ctrl-btn" data-i18n-title="ctrl.toggleHitAreas" title="Toggle Hit Areas (H)" aria-label="Toggle Hit Areas (H)">
       <img src="data:image/svg+xml,%3csvg%20version='1.1'%20xmlns='http://www.w3.org/2000/svg'%20xmlns:xlink='http://www.w3.org/1999/xlink'%20width='20'%20height='20'%20viewBox='0%200%2024%2024'%20aria-hidden='true'%3e%3ccircle%20cx='12'%20cy='12'%20r='7'%20fill='none'%20stroke='%23fff'%20stroke-width='2'/%3e%3ccircle%20cx='12'%20cy='12'%20r='3'%20fill='none'%20stroke='%23fff'%20stroke-width='2'/%3e%3cline%20x1='12'%20y1='3'%20x2='12'%20y2='1'%20stroke='%23fff'%20stroke-width='2'%20stroke-linecap='round'/%3e%3cline%20x1='21'%20y1='12'%20x2='23'%20y2='12'%20stroke='%23fff'%20stroke-width='2'%20stroke-linecap='round'/%3e%3cline%20x1='12'%20y1='21'%20x2='12'%20y2='23'%20stroke='%23fff'%20stroke-width='2'%20stroke-linecap='round'/%3e%3cline%20x1='3'%20y1='12'%20x2='1'%20y2='12'%20stroke='%23fff'%20stroke-width='2'%20stroke-linecap='round'/%3e%3c/svg%3e" width="20" height="20" alt="" aria-hidden="true" />
     </button>
     
-    <button id="toggle-lipsync-btn" class="ctrl-btn" title="Lip Sync (L)" aria-label="Lip Sync (L)">
+    <button id="toggle-lipsync-btn" class="ctrl-btn" data-i18n-title="ctrl.toggleLipSync" title="Lip Sync (L)" aria-label="Lip Sync (L)">
       <img src="data:image/svg+xml,%3csvg%20version='1.1'%20xmlns='http://www.w3.org/2000/svg'%20xmlns:xlink='http://www.w3.org/1999/xlink'%20width='20'%20height='20'%20viewBox='0%200%2024%2024'%20aria-hidden='true'%3e%3crect%20x='9'%20y='4'%20width='6'%20height='9'%20rx='3'%20ry='3'%20fill='none'%20stroke='%23fff'%20stroke-width='2'/%3e%3cpath%20d='M7%2011v1a5%205%200%200%200%2010%200v-1'%20fill='none'%20stroke='%23fff'%20stroke-width='2'%20stroke-linecap='round'/%3e%3cline%20x1='12'%20y1='17'%20x2='12'%20y2='20'%20stroke='%23fff'%20stroke-width='2'%20stroke-linecap='round'/%3e%3cline%20x1='9'%20y1='20'%20x2='15'%20y2='20'%20stroke='%23fff'%20stroke-width='2'%20stroke-linecap='round'/%3e%3c/svg%3e" width="20" height="20" alt="" aria-hidden="true" />
     </button>
     
-    <button id="toggle-recording-btn" class="ctrl-btn" title="Toggle Recording Controls (R)" aria-label="Toggle Recording Controls (R)">
+    <button id="toggle-recording-btn" class="ctrl-btn" data-i18n-title="ctrl.toggleRecording" title="Toggle Recording Controls (R)" aria-label="Toggle Recording Controls (R)">
       <img src="data:image/svg+xml,%3csvg%20version='1.1'%20xmlns='http://www.w3.org/2000/svg'%20xmlns:xlink='http://www.w3.org/1999/xlink'%20width='20'%20height='20'%20viewBox='0%200%2024%2024'%20aria-hidden='true'%3e%3crect%20x='4'%20y='6'%20width='11'%20height='12'%20rx='2'%20ry='2'%20fill='none'%20stroke='%23fff'%20stroke-width='2'/%3e%3cpolygon%20points='17,9%2021,7%2021,17%2017,15'%20fill='none'%20stroke='%23fff'%20stroke-width='2'%20stroke-linejoin='round'/%3e%3c/svg%3e" width="20" height="20" alt="" aria-hidden="true" />
     </button>
 
-    <button id="btn-bg-picker" class="ctrl-btn" title="Background Color (B)" aria-label="Background Color (B)"><span class="bg-swatch" style="background: #000; width:18px; height:18px; border-radius:50%; display:inline-block; vertical-align:middle; margin-right:0;"></span></button>
+    <button id="btn-bg-picker" class="ctrl-btn" data-i18n-title="ctrl.bgColor" title="Background Color (B)"><span class="bg-swatch" style="background: #000; width:18px; height:18px; border-radius:50%; display:inline-block; vertical-align:middle; margin-right:0;"></span></button>
 
-    <button id="btn-reset-view" class="ctrl-btn" title="Reset View">⤾</button>
-    <button id="btn-zoom-in" class="ctrl-btn" title="Zoom In">＋</button>
+    <button id="btn-reset-view" class="ctrl-btn" data-i18n-title="ctrl.resetView" title="Reset View">⤾</button>
+    <button id="btn-zoom-in" class="ctrl-btn" data-i18n-title="ctrl.zoomIn" title="Zoom In">＋</button>
     <input id="bg-color-input" type="color" style="display:none;" aria-hidden="true" />
-    <button id="btn-zoom-out" class="ctrl-btn" title="Zoom Out">−</button>
+    <button id="btn-zoom-out" class="ctrl-btn" data-i18n-title="ctrl.zoomOut" title="Zoom Out">−</button>
     <div class="ctrl-sep"></div>
-    <button id="import-model-btn" class="ctrl-btn" title="Import Model Folder" aria-label="Import Model Folder">
+    <button id="import-model-btn" class="ctrl-btn" data-i18n-title="ctrl.importModel" title="Import Model Folder" data-i18n-aria-label="ctrl.importModel" aria-label="Import Model Folder">
       <img src="data:image/svg+xml,%3csvg%20version='1.1'%20xmlns='http://www.w3.org/2000/svg'%20xmlns:xlink='http://www.w3.org/1999/xlink'%20width='20'%20height='20'%20viewBox='0%200%2024%2024'%20aria-hidden='true'%3e%3cpath%20d='M3%207h5l2%202h11v8a2%202%200%200%201-2%202H5a2%202%200%200%201-2-2V7z'%20fill='none'%20stroke='%23fff'%20stroke-width='2'%20stroke-linejoin='round'/%3e%3cpath%20d='M12%2010v6M9.5%2013.5L12%2016l2.5-2.5'%20fill='none'%20stroke='%23fff'%20stroke-width='2'%20stroke-linecap='round'/%3e%3c/svg%3e" width="20" height="20" alt="" aria-hidden="true" />
     </button>
-    <select id="workspace-select" class="workspace-select" title="Select active model workspace" aria-label="Select active model workspace">
-      <option value="-1">No model loaded</option>
+    <select id="workspace-select" class="workspace-select" data-i18n-title="workspace.selectActive" title="Select active model workspace" data-i18n-aria-label="workspace.selectActive" aria-label="Select active model workspace">
+      <option value="-1" data-i18n="workspace.noModel">No model loaded</option>
     </select>
-    <button id="workspace-remove-btn" class="ctrl-btn" title="Remove Current Model" aria-label="Remove Current Model" disabled>
+    <button id="workspace-remove-btn" class="ctrl-btn" data-i18n-title="workspace.removeModel" title="Remove Current Model" data-i18n-aria-label="workspace.removeModel" aria-label="Remove Current Model" disabled>
       <img src="data:image/svg+xml,%3csvg%20version='1.1'%20xmlns='http://www.w3.org/2000/svg'%20xmlns:xlink='http://www.w3.org/1999/xlink'%20width='20'%20height='20'%20viewBox='0%200%2024%2024'%20aria-hidden='true'%3e%3cpath%20d='M5%207h14M10%2010v7M14%2010v7'%20fill='none'%20stroke='%23fff'%20stroke-width='2'%20stroke-linecap='round'/%3e%3crect%20x='6'%20y='7'%20width='12'%20height='11'%20rx='1'%20ry='1'%20fill='none'%20stroke='%23fff'%20stroke-width='2'/%3e%3cpath%20d='M9%204h6l1%202H8l1-2z'%20fill='none'%20stroke='%23fff'%20stroke-width='2'%20stroke-linejoin='round'/%3e%3c/svg%3e" width="20" height="20" alt="" aria-hidden="true" />
     </button>
+    <div class="ctrl-sep"></div>
+    <select id="locale-select" class="workspace-select" style="width:auto;min-width:90px;" data-i18n-title="footer.language" title="Language"></select>
   </div>
 
 
   <div id="motion-list-window" style="display: none;" role="dialog" aria-hidden="true">
-    <h3>Motion List</h3>
+    <h3 data-i18n="motion.title">Motion List</h3>
     <div class="window-content">
       <div class="scrollable-content">
         <div id="motion-content" tabindex="0">
@@ -1233,13 +1349,13 @@
   </div>
 
   <div id="motion-merge-window" style="display: none;" role="dialog" aria-hidden="true">
-    <h3>Motion Merge</h3>
+    <h3 data-i18n="motion.mergeTitle">Motion Merge</h3>
     <div class="window-content">
       <div class="scrollable-content">
         <div class="merge-header">
-          <label for="motion-multi-select">Select motions to merge:</label>
+          <label for="motion-multi-select" data-i18n="motion.mergeSelect">Select motions to merge:</label>
           <div class="merge-instructions">
-            <small>Hold Ctrl/Cmd to select multiple motions</small>
+            <small data-i18n="motion.mergeHint">Hold Ctrl/Cmd to select multiple motions</small>
           </div>
         </div>
         <div class="merge-select-container">
@@ -1248,21 +1364,21 @@
         </div>
         <div class="merge-preview">
           <div class="selected-count">
-            <span id="selected-motions-count">0</span> motions selected
+            <span id="selected-motions-count">0</span> <span data-i18n="motion.motionsSelected">motions selected</span>
           </div>
           <div id="selected-motions-list" class="selected-list"></div>
         </div>
       </div>
       <div class="window-controls">
-        <button id="clear-selection-btn" class="secondary-btn">Clear Selection</button>
-        <button id="merge-btn" class="primary-btn" disabled>Merge & Play</button>
-        <button id="merge-record-btn" class="primary-btn" disabled>Merge & Record</button>
+        <button id="clear-selection-btn" class="secondary-btn" data-i18n="motion.clearSelection">Clear Selection</button>
+        <button id="merge-btn" class="primary-btn" data-i18n="motion.mergePlay" disabled>Merge & Play</button>
+        <button id="merge-record-btn" class="primary-btn" data-i18n="motion.mergeRecord" disabled>Merge & Record</button>
       </div>
     </div>
   </div>
 
   <div id="parameter-window" style="display: none;">
-    <h3>Parameters</h3>
+    <h3 data-i18n="param.title">Parameters</h3>
     <div class="window-content">
       <div class="scrollable-content">
         <div id="parameter-list">
@@ -1274,43 +1390,43 @@
   </div>
 
   <div id="parts-window" style="display: none;" role="dialog" aria-hidden="true">
-    <h3>Parts</h3>
+    <h3 data-i18n="parts.title">Parts</h3>
     <div class="window-content">
       <div class="scrollable-content">
         <div id="parts-list">
         </div>
       </div>
       <div class="window-controls">
-        <button id="parts-reset-btn" class="refresh-btn">Reset All</button>
+        <button id="parts-reset-btn" class="refresh-btn" data-i18n="parts.resetAll">Reset All</button>
       </div>
     </div>
   </div>
 
   <div id="expression-list-window" style="display: none;">
-    <h3>Expressions</h3>
+    <h3 data-i18n="expr.title">Expressions</h3>
     <div class="window-content">
       <div class="scrollable-content">
         <div id="expression-list" class="expression-content">
         </div>
       </div>
       <div class="window-controls">
-        <button id="expr-random-btn" class="refresh-btn">Random</button>
-        <button id="expr-reset-btn" class="refresh-btn">Reset</button>
+        <button id="expr-random-btn" class="refresh-btn" data-i18n="expr.random">Random</button>
+        <button id="expr-reset-btn" class="refresh-btn" data-i18n="expr.reset">Reset</button>
       </div>
     </div>
   </div>
 
   <div id="lipsync-window" style="display: none;" role="dialog" aria-hidden="true">
-    <h3>Lip Sync</h3>
+    <h3 data-i18n="lipsync.title">Lip Sync</h3>
     <div class="window-content">
       <div class="scrollable-content">
         <div class="lipsync-section">
           <div class="lipsync-row" style="justify-content: space-between;">
             <label style="display:flex; align-items:center; gap:6px;">
               <input id="lipsync-enable" type="checkbox" />
-              <span>Enable</span>
+              <span data-i18n="lipsync.enable">Enable</span>
             </label>
-            <span id="lipsync-status" class="lipsync-small">Idle</span>
+            <span id="lipsync-status" class="lipsync-small" data-i18n="lipsync.idle">Idle</span>
           </div>
           <div class="lipsync-meter">
             <div id="lipsync-meter-fill" class="lipsync-meter-fill"></div>
@@ -1321,89 +1437,89 @@
           <div class="lipsync-row">
             <label style="display:flex; align-items:center; gap:6px;">
               <input id="lipsync-source-mic" type="radio" name="lipsync-source" value="mic" checked />
-              <span>Microphone</span>
+              <span data-i18n="lipsync.microphone">Microphone</span>
             </label>
             <label style="display:flex; align-items:center; gap:6px;">
               <input id="lipsync-source-file" type="radio" name="lipsync-source" value="file" />
-              <span>Audio file</span>
+              <span data-i18n="lipsync.audioFile">Audio file</span>
             </label>
           </div>
           <div id="lipsync-mic-controls" class="lipsync-row">
-            <button id="lipsync-mic-btn" class="primary-btn">Start Mic</button>
-            <span id="lipsync-mic-status" class="lipsync-small">Not started</span>
+            <button id="lipsync-mic-btn" class="primary-btn" data-i18n="lipsync.startMic">Start Mic</button>
+            <span id="lipsync-mic-status" class="lipsync-small" data-i18n="lipsync.notStarted">Not started</span>
           </div>
           <div id="lipsync-file-controls" class="lipsync-row" style="display:none;">
             <input id="lipsync-file-input" class="lipsync-file-input" type="file" accept="audio/*" />
-            <button id="lipsync-file-play" class="secondary-btn" disabled>Play</button>
-            <button id="lipsync-file-stop" class="secondary-btn" disabled>Stop</button>
-            <span id="lipsync-file-name" class="lipsync-small">No file loaded</span>
+            <button id="lipsync-file-play" class="secondary-btn" disabled data-i18n="lipsync.play">Play</button>
+            <button id="lipsync-file-stop" class="secondary-btn" disabled data-i18n="lipsync.stop">Stop</button>
+            <span id="lipsync-file-name" class="lipsync-small" data-i18n="lipsync.noFile">No file loaded</span>
           </div>
         </div>
 
         <div class="lipsync-section">
           <label class="lipsync-label">
-            <span>Sensitivity</span>
+            <span data-i18n="lipsync.sensitivity">Sensitivity</span>
             <span id="lipsync-sensitivity-val">2.20x</span>
           </label>
           <input id="lipsync-sensitivity" class="parameter-slider" type="range" min="0.5" max="3" step="0.05" value="2.2" />
 
           <label class="lipsync-label">
-            <span>Smoothing</span>
+            <span data-i18n="lipsync.smoothing">Smoothing</span>
             <span id="lipsync-smoothing-val">0.70</span>
           </label>
           <input id="lipsync-smoothing" class="parameter-slider" type="range" min="0" max="0.95" step="0.01" value="0.70" />
 
           <label class="lipsync-label">
-            <span>Gate</span>
+            <span data-i18n="lipsync.gate">Gate</span>
             <span id="lipsync-gate-val">0.005</span>
           </label>
           <input id="lipsync-gate" class="parameter-slider" type="range" min="0" max="0.1" step="0.005" value="0.005" />
         </div>
 
         <div class="lipsync-section">
-          <div class="lipsync-small">Target params: <span id="lipsync-targets">auto</span></div>
+          <div class="lipsync-small"><span data-i18n="lipsync.targetParams">Target params:</span> <span id="lipsync-targets">auto</span></div>
         </div>
       </div>
       <div class="window-controls">
-        <button id="lipsync-refresh-btn" class="refresh-btn">Re-detect Params</button>
-        <button id="lipsync-disable-btn" class="secondary-btn">Disable</button>
+        <button id="lipsync-refresh-btn" class="refresh-btn" data-i18n="lipsync.redetect">Re-detect Params</button>
+        <button id="lipsync-disable-btn" class="secondary-btn" data-i18n="lipsync.disable">Disable</button>
       </div>
     </div>
   </div>
 
   <div id="bg-window" role="dialog" aria-hidden="true" aria-label="Background Settings">
-    <h3>Background</h3>
+    <h3 data-i18n="bg.title">Background</h3>
     <div class="bg-mode-row">
-      <div style="font-size:0.8em; opacity:0.85; margin-bottom:4px;">Background type</div>
+      <div style="font-size:0.8em; opacity:0.85; margin-bottom:4px;" data-i18n="bg.type">Background type</div>
       <div class="bg-mode-options">
         <label class="bg-mode-tab" data-mode="solid">
           <input type="radio" name="bg-mode" value="solid" id="bg-mode-solid" checked>
-          <span>Solid</span>
+          <span data-i18n="bg.solid">Solid</span>
         </label>
         <label class="bg-mode-tab" data-mode="gradient">
           <input type="radio" name="bg-mode" value="gradient" id="bg-mode-gradient">
-          <span>Gradient</span>
+          <span data-i18n="bg.gradient">Gradient</span>
         </label>
         <label class="bg-mode-tab" data-mode="image">
           <input type="radio" name="bg-mode" value="image" id="bg-mode-image">
-          <span>Image</span>
+          <span data-i18n="bg.image">Image</span>
         </label>
       </div>
     </div>
 
     <div id="bg-section-solid" class="bg-section">
       <div class="bg-section-header">
-        <span>Solid color</span>
+        <span data-i18n="bg.solidColor">Solid color</span>
       </div>
       <div class="bg-section-body">
         <input id="bg-solid-color" class="bg-color-input" type="color" />
-        <span style="opacity:0.8;">Use a single flat color for the background.</span>
+        <span style="opacity:0.8;" data-i18n="bg.solidHint">Use a single flat color for the background.</span>
       </div>
     </div>
 
     <div id="bg-section-gradient" class="bg-section">
       <div class="bg-section-header">
-        <span>Gradient</span>
+        <span data-i18n="bg.gradientLabel">Gradient</span>
       </div>
       <div class="bg-section-body">
         <input id="bg-grad-start" class="bg-color-input" type="color" />
@@ -1416,48 +1532,64 @@
 
     <div id="bg-section-image" class="bg-section">
       <div class="bg-section-header">
-        <span>Image</span>
+        <span data-i18n="bg.imageLabel">Image</span>
       </div>
       <div class="bg-section-body">
         <input id="bg-image-input" class="bg-image-input" type="file" accept="image/*" />
-        <button id="bg-image-clear" class="bg-small-btn" type="button">Clear</button>
+        <button id="bg-image-clear" class="bg-small-btn" type="button" data-i18n="bg.clear">Clear</button>
       </div>
       <div id="bg-image-preview" class="bg-preview"></div>
     </div>
 
     <div class="bg-window-footer">
-      <button id="bg-close-btn" class="bg-small-btn" type="button">Close</button>
+      <button id="bg-close-btn" class="bg-small-btn" type="button" data-i18n="bg.close">Close</button>
     </div>
   </div>
 
   <div id="recording-window" class="hidden" aria-live="polite" aria-label="Recording Controls" aria-hidden="true">
-    <button id="rec-start-btn" class="rec-btn" title="Start Recording" aria-label="Start Recording">●</button>
-    <button id="rec-pause-btn" class="pause-btn" title="Pause Recording" aria-label="Pause Recording" disabled>⏸</button>
-    <button id="rec-stop-btn" class="stop-btn" title="Stop Recording" aria-label="Stop Recording" disabled>⏹</button>
-    <button id="rec-photo-btn" class="pause-btn" title="Take Snapshot" aria-label="Take Snapshot">⛶</button>
-    <a id="rec-download-btn" class="download-btn disabled" href="#" download="live2d_recording.webm" aria-disabled="true">Download</a>
+    <button id="rec-start-btn" class="rec-btn" data-i18n-title="rec.start" title="Start Recording" data-i18n-aria-label="rec.start" aria-label="Start Recording">●</button>
+    <button id="rec-pause-btn" class="pause-btn" data-i18n-title="rec.pause" title="Pause Recording" data-i18n-aria-label="rec.pause" aria-label="Pause Recording" disabled>⏸</button>
+    <button id="rec-stop-btn" class="stop-btn" data-i18n-title="rec.stop" title="Stop Recording" data-i18n-aria-label="rec.stop" aria-label="Stop Recording" disabled>⏹</button>
+    <button id="rec-photo-btn" class="pause-btn" data-i18n-title="rec.snapshot" title="Take Snapshot" data-i18n-aria-label="rec.snapshot" aria-label="Take Snapshot">⛶</button>
+    <a id="rec-download-btn" class="download-btn disabled" href="#" download="live2d_recording.webm" aria-disabled="true" data-i18n="rec.download">Download</a>
+    <button id="rec-settings-btn" class="pause-btn rec-settings-btn" data-i18n-title="rec.settings" title="Snapshot Settings" aria-pressed="false" aria-label="Snapshot Settings" aria-expanded="false">⚙</button>
     <div class="timer" id="rec-timer">00:00</div>
-    <label style="opacity:0.9;font-size:0.85em;margin-left:8px;display:flex;align-items:center;gap:8px;">
-      <input id="rec-include-audio" type="checkbox" aria-label="Include app audio"> Audio
-    </label>
-    <div class="note" style="opacity:0.8;font-size:0.8em;margin-left:8px;">UI is not included in the video.</div>
     <div class="rec-indicator" aria-hidden="true"></div>
+  </div>
+
+  <div id="recording-settings-panel" class="rec-settings-panel hidden" aria-hidden="true" role="group" aria-label="Snapshot Settings">
+    <label class="rec-option">
+      <input id="rec-include-audio" type="checkbox" aria-label="Include app audio"> <span data-i18n="rec.audio">Audio</span>
+    </label>
+    <label class="rec-option">
+      <input id="rec-transparent-bg" type="checkbox" checked aria-label="Transparent background"> <span data-i18n="rec.transparent">Transparent BG</span>
+    </label>
+    <label class="rec-option">
+      <span data-i18n="rec.resolution">Resolution</span>
+      <select id="rec-resolution" aria-label="Snapshot resolution">
+        <option value="1x">1x</option>
+        <option value="2x" selected>2x</option>
+        <option value="4k">4K</option>
+        <option value="8k">8K</option>
+      </select>
+    </label>
+    <div class="rec-note" data-i18n="rec.uiNote">UI is not included in the video.</div>
   </div>
 
 <footer class="app-footer">
   <span>
-    Powered by <a href="https://www.live2d.com/" target="_blank" rel="noopener">Live2D Cubism</a>
+    <span data-i18n="footer.poweredBy">Powered by</span> <a href="https://www.live2d.com/" target="_blank" rel="noopener">Live2D Cubism</a>
   </span>
   <span class="separator">•</span>
-  <span>
+  <span data-i18n="footer.personal">
     Non-commercial personal project
   </span>
   <span class="separator">•</span>
-  <span>
+  <span data-i18n="footer.local">
     Models and motion files are loaded locally and are not hosted or distributed
   </span>
   <span class="separator">•</span>
-  <span>
+  <span data-i18n="footer.trademark">
     Live2D and Cubism are trademarks of Live2D Inc.
   </span>
 </footer>
